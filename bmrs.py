@@ -1,6 +1,5 @@
-"""An project that enables you fetch BMRS data as json instead of XML"""
-__version__ = '1.0'
-__python__ = 3.6 (upwards)
+"""This package that enables you fetch BMRS data as json instead of XML"""
+__version__ = '1.1'
 
 
 from time import sleep, time
