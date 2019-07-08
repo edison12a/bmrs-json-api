@@ -10,7 +10,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install bmrs-js
 pip install bmrs
 ```
 
-## Exmaple Usage
+## Example Usage
 
 ```python
 '''This could be your example consumer file from which you will receive and process the API responses'''
@@ -32,8 +32,14 @@ bmrs.connect_to_api(
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
 Please make sure to update tests as appropriate.
+Also, add your name to the readme in the section below.
+
+
+## Contributors and acknowledgment
+1. Edison Abahurire [simicode](https://github.com/SimiCode)
+2.
+
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
