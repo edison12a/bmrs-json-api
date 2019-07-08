@@ -2,8 +2,8 @@ import bmrs
 
 
 def on_message(json_response):
-    print(json_response.keys())
-
+    print(list(json_response.keys()))
+    # print(json_response)
 
 bmrs.connect_to_api(
         api_key = 'kslch6aa8p97wyn',
