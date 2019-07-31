@@ -7,9 +7,10 @@ def on_message(json_response):
     print(list(json_response.keys()))
     # print(json_response)
 
+
 # connect to the bmrs API using your credentials
 bmrs.connect_to_api(
-        api_key = 'kslch6aa8p97wyn',
-        client_id = 89898989,
+        api_key = 'YOUR API KEY HERE',
+        client_id = YOUR_CLIENT_ID_HERE,
         listener=on_message
     )
