@@ -14,7 +14,7 @@ class MyListener(stomp.ConnectionListener):
         self.listener = listener
 
     def on_error(self, headers, message):
-        print(f'ERROR "{message}"')
+        print(f'ERROR! : "{message}"')
 
     def on_message(self, headers, message):
         message = xmltodict.parse(message)
@@ -28,9 +28,9 @@ class MyListener(stomp.ConnectionListener):
 def connect_to_api(api_key='', client_id='', listener='', port=61613):
     ''' Connect to the BMRS API. This function will get the XML data and convert it to JSON instantaneoudly!
 
-    api_key: is your API key that can be got by following https://www.elexon.co.uk/wp-content/uploads/2017/06/bmrs_api_data_push_user_guide_v1.1.pdf
-    client_id: is your Client ID that can be got by following https://www.elexon.co.uk/wp-content/uploads/2017/06/bmrs_api_data_push_user_guide_v1.1.pdf
-    listener: is your custom function that recieves & handles messages returned from the API. See a sample of this in our sample file sample_client.py on github.
+    `api_key`: is your API key that can be got by following [Guide](https://www.elexon.co.uk/documents/training-guidance/bsc-guidance-notes/bmrs-api-and-data-push-user-guide-2/).
+    `client_id`: is your Client ID that can be got together with the APIkey from the above step.
+    `listener`: is your custom function that recieves & handles messages returned from the API. See a sample of this in our sample file sample_client.py on github.
     '''
     # connect to API using stomp
     conn = stomp.Connection12(
