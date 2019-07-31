@@ -26,7 +26,7 @@ def on_message(json_response):
 bmrs.connect_to_api(
         api_key = 'kslch6aa8p97wyn',
         client_id = 89898989,
-        listener=on_message
+        listener=on_message # mention the name of your main data recieving function s a parameter
     )
 ```
 
