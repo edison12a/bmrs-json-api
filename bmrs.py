@@ -1,5 +1,5 @@
-"""This package that enables you fetch BMRS data as json instead of XML"""
-__version__ = '1.2'
+"""This package enables you receive BMRS data as json instead of the default XML"""
+__version__ = '1.2.2'
 
 
 from time import sleep, time
