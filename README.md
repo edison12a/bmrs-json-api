@@ -2,7 +2,6 @@
 
 For returning BMRS API data in json format, it fetches data and auto converts it to a dictionary object, easier for data processing.
 
-
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install bmrs-json-api.
@@ -10,7 +9,6 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install bmrs-js
 ```bash
 pip install bmrs
 ```
-
 
 ## Example Usage
 
@@ -20,31 +18,36 @@ import bmrs
 
 
 def on_message(json_response):
-    '''Receive a JSON reponse and do stuff with it'''
+    '''Receive a JSON response and do stuff with it'''
     print(list(json_response.keys()))
     # print(json_response)
 
 # connect to the bmrs API using your credentials
 bmrs.connect_to_api(
         api_key = 'YOUR API KEY HERE',
-        client_id = YOUR_CLIENT_ID_HERE,
-        listener=on_message # mention the name of your main data recieving function s a parameter
+        client_id = 'YOUR_CLIENT_ID_HERE',
+        listener=on_message # mention the name of your main data receiving function as a parameter
     )
 ```
 
+## Getting API key
+
+- Register on the [ELEXON Portal](https://www.elexonportal.co.uk/).
+- The API Key is the `Scripting Key` under `Basics` on your profile.
+
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to contribute.
 Please make sure to update tests as appropriate.
 Also, add your name to the readme in the Contributors section (below).
 
-
 ## Contributors and acknowledgment
-1. Edison Abahurire [simicode](https://github.com/SimiCode)
-2.
 
+1. Edison Abahurire [simicode](https://github.com/SimiCode)
+2. Elijah Rwothoromo [rwothoromo](https://github.com/Rwothoromo)
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
 
+[MIT](https://choosealicense.com/licenses/mit/)
 
 Packaged with: [Flit](https://buildmedia.readthedocs.org/media/pdf/flit/latest/flit.pdf)
