@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = '1.2.4'
+__version__ = '1.2.5'
 
 
 from time import sleep, time
@@ -10,11 +10,15 @@ import json
 
 def connect_and_subscribe(conn, api_key, client_id):
     conn.start()
-    conn.connect(api_key, api_key, True)
+    conn.connect(api_key, api_key, wait=True, headers={'client-id': client_id})
     conn.subscribe(
         destination='/topic/bmrsTopic',
         ack='auto',
-        id=client_id)
+        id=client_id,
+        headers={'subscription-type': 'MULTICAST',
+                 'durable-subscription-name': 'someRandomValue'}
+    )
+
 
 class MyListener(stomp.ConnectionListener):
     '''This is a listener class that listens for new messages using the STOMP protocol'''
