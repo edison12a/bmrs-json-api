@@ -51,6 +51,14 @@ class MyListener(stomp.ConnectionListener):
                 print("Reconnect attempt failed")
                 time.sleep(1)
 
+    def on_heartbeat_timeout(self):
+        """
+        Called by the STOMP connection when a heartbeat message has not been
+        received beyond the specified period.
+        """
+        print('heartbeat timed out')
+        connect_and_subscribe(self.conn)
+
 
 def connect_to_api(api_key='', client_id='', listener='', port=61613):
     ''' Connect to the BMRS API. This function will get the XML data and convert it to JSON instantaneously!
