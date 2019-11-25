@@ -8,14 +8,24 @@ import xmltodict
 import json
 
 
+def connect_and_subscribe(conn, api_key, client_id):
+    conn.start()
+    conn.connect(api_key, api_key, True)
+    conn.subscribe(
+        destination='/topic/bmrsTopic',
+        ack='auto',
+        id=client_id)
+
 class MyListener(stomp.ConnectionListener):
     '''This is a listener class that listens for new messages using the STOMP protocol'''
 
-    def __init__(self, listener):
+    def __init__(self, conn, listener):
         self.listener = listener
+        self.conn = conn
 
     def on_error(self, headers, message):
         print(f'ERROR! : "{message}"')
+        connect_and_subscribe(self.conn)
 
     def on_message(self, headers, message):
         message = xmltodict.parse(message)
@@ -24,6 +34,22 @@ class MyListener(stomp.ConnectionListener):
             # print('header: key %s , value %s' %(key, value))
         message = json.loads(json.dumps(message))
         self.listener(message)
+
+    def on_disconnected(self):
+        print('disconnected')
+        connect_and_subscribe(self.conn)
+
+    def on_heartbeat_timeout(self):
+        print("Oh damn - the heartbeats have timed out.... Lets try re-connecting 30 times")
+        for n in range(1, 31):
+            try:
+                print("Reconnecting: Attempt: ", n)
+                connect_and_subscribe(self.conn)
+                break
+            except stomp.exception.ConnectFailedException:
+                # Oh, still can't reconnect
+                print("Reconnect attempt failed")
+                time.sleep(1)
 
 
 def connect_to_api(api_key='', client_id='', listener='', port=61613):
@@ -37,15 +63,8 @@ def connect_to_api(api_key='', client_id='', listener='', port=61613):
     conn = stomp.Connection12(
         host_and_ports=[
             ('api.bmreports.com', port)], use_ssl=True)
-    conn.start()
-    conn.connect(api_key, api_key, True)
-    conn.subscribe(
-        destination='/topic/bmrsTopic',
-        ack='auto',
-        id=client_id)
-    # add a listener instance and initialize it with the user's supplied custom listener
-    conn.set_listener('', MyListener(listener))
-
+    conn.set_listener('', MyListener(conn, listener))
+    connect_and_subscribe(conn, api_key, client_id)
     # check for new messages after every x seconds
     while conn.is_connected():
         sleep(1)
