@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = '1.2.5'
+__version__ = '1.2.6'
 
 
 from time import sleep, time
@@ -23,13 +23,15 @@ def connect_and_subscribe(conn, api_key, client_id):
 class MyListener(stomp.ConnectionListener):
     '''This is a listener class that listens for new messages using the STOMP protocol'''
 
-    def __init__(self, conn, listener):
+    def __init__(self, conn, listener, api_key, client_id):
         self.listener = listener
         self.conn = conn
+        self.api_key = api_key
+        self.client_id = client_id
 
     def on_error(self, headers, message):
         print(f'ERROR! : "{message}"')
-        connect_and_subscribe(self.conn)
+        connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
     def on_message(self, headers, message):
         message = xmltodict.parse(message)
@@ -41,14 +43,14 @@ class MyListener(stomp.ConnectionListener):
 
     def on_disconnected(self):
         print('disconnected')
-        connect_and_subscribe(self.conn)
+        connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
     def on_heartbeat_timeout(self):
         print("Oh damn - the heartbeats have timed out.... Lets try re-connecting 30 times")
         for n in range(1, 31):
             try:
                 print("Reconnecting: Attempt: ", n)
-                connect_and_subscribe(self.conn)
+                connect_and_subscribe(self.conn, self.api_key, self.client_id)
                 break
             except stomp.exception.ConnectFailedException:
                 # Oh, still can't reconnect
@@ -61,7 +63,7 @@ class MyListener(stomp.ConnectionListener):
         received beyond the specified period.
         """
         print('heartbeat timed out')
-        connect_and_subscribe(self.conn)
+        connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
 
 def connect_to_api(api_key='', client_id='', listener='', port=61613):
@@ -75,7 +77,7 @@ def connect_to_api(api_key='', client_id='', listener='', port=61613):
     conn = stomp.Connection12(
         host_and_ports=[
             ('api.bmreports.com', port)], use_ssl=True)
-    conn.set_listener('', MyListener(conn, listener))
+    conn.set_listener('', MyListener(conn, listener, api_key, client_id))
     connect_and_subscribe(conn, api_key, client_id)
     # check for new messages after every x seconds
     while conn.is_connected():
