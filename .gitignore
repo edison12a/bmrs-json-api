@@ -1,1 +1,9 @@
+# virtual environments
 venv
+env
+
+# Visual Studio Code configuration
+.vscode
+
+# python bytecode files
+*.pyc
