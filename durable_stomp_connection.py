@@ -78,8 +78,11 @@ class DurableStompConnection:
         """
         Restarts listening for messages but must first clean up
         """
-        if self.disconnect():
-            self.start()
+        try:
+            self.disconnect()
+        except stomp.exception.NotConnectedException:
+            pass
+        self.start()
 
     def disconnect(self):
         """
