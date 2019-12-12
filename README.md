@@ -60,9 +60,9 @@ Also, add your name to the readme in the Contributors section (below).
 
 ## Contributors and acknowledgment
 
-1. Edison Abahurire [simicode](https://github.com/SimiCode)
-2. Elijah Rwothoromo [rwothoromo](https://github.com/Rwothoromo)
-3. Martin Ahindura [Tinitto](https://github.com/Tinitto)
+1. Edison Abahurire [simicode](https://github.com/SimiCode) - BDFL
+2. Elijah Rwothoromo [rwothoromo](https://github.com/Rwothoromo) - For big updates to documentation
+3. Martin Ahindura [Tinitto](https://github.com/Tinitto) - For adding the durable connection method
 
 ## License
 
