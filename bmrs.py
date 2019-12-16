@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = "1.2.71"
+__version__ = "1.2.75"
 
 
 from time import sleep, time
@@ -13,21 +13,30 @@ def connect_and_subscribe(conn, api_key, client_id, event=""):
     retries = 1 if event in "start" else 10
     # keep retryinh to re-connect
     for retry in range(retries):
-        print(f"Attempting re/connection {retry} on", event)
-        acknowledgement_mode = "client-individual"
-        headers = {
-            "activemq.subcriptionName": client_id,
-            "activemq.subscriptionName": client_id,
-        }
-        conn.start()
-        conn.connect(api_key, api_key, wait=True, headers={"client-id": client_id})
-        conn.subscribe(
-            destination="/topic/bmrsTopic",
-            ack=acknowledgement_mode,
-            id=client_id,
-            headers=headers,
-        )
-        sleep(5)
+        try:
+            print(f"{client_id} Attempting re/connection {retry} on", event)
+            acknowledgement_mode = "client-individual"
+            headers = {
+                "activemq.subcriptionName": client_id,
+                "activemq.subscriptionName": client_id,
+            }
+            conn.start()
+            conn.connect(api_key, api_key, wait=True, headers={"client-id": client_id})
+            conn.subscribe(
+                destination="/topic/bmrsTopic",
+                ack=acknowledgement_mode,
+                id=client_id,
+                headers=headers,
+            )
+        except stomp.exception.ConnectFailedException:
+            print('stomp.exception.ConnectFailedException')
+        except OSError:
+            print('OSError: [Errno 0] Error')
+        except Exception as e:
+            print(e)
+        sleep(6)
+    # send a notification to the developer
+    # twilio.send_sms('38591835912392931)
 
 
 def get_hostname():
