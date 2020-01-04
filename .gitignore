@@ -1,2 +1,5 @@
 venv
 local_sample.py
+*.pyc
+*.whl
+*.gz
