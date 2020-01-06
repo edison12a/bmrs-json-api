@@ -10,18 +10,11 @@ import socket
 
 
 def connect_and_subscribe(conn, api_key, client_id):
-    # first disconnect before trying to reconnect
-    # try:
-    #     conn.disconnect()
-    # except:
-    #     print('conn.disconnect()')
-    # attemp a connect
     acknowledgement_mode = "client-individual"
     headers = {
         "activemq.subcriptionName": client_id,
         "activemq.subscriptionName": client_id,
     }
-    conn.start()
     conn.connect(api_key, api_key, wait=True, headers={"client-id": client_id})
     conn.subscribe(
         destination="/topic/bmrsTopic",
@@ -44,10 +37,11 @@ class MyListener(stomp.ConnectionListener):
         self.conn = conn
         self.api_key = api_key
         self.client_id = client_id
+        self.acknowledgement_mode = "client-individual"
 
     def on_error(self, headers, message):
-        print(f'on_error! : "{message}"')
-        sleep(30)
+        print(f'on_error! : "{headers}"')
+        disconnect_client(self.conn, self.client_id)
         connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
     def on_message(self, headers, message):
@@ -63,12 +57,11 @@ class MyListener(stomp.ConnectionListener):
 
     def on_disconnected(self):
         print("disconnected")
-        sleep(30)
         connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
     def on_heartbeat_timeout(self):
         print("heartbeat_timeout")
-        sleep(30)
+        disconnect_client(self.conn, self.client_id)
         connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
 
@@ -78,25 +71,47 @@ def connect_to_api(api_key, listener, client_id="", port=61613):
     `client_id`:str is your Client ID that can be got together with the APIkey from the above step.
     `listener`:func is your custom function that receives & handles messages returned from the API. See a sample of this in our sample file sample_client.py on github.
     """
-    while True:
-        try:
-            # generate client id if not supplied
-            if not client_id:
-                client_id = get_hostname()
-            print('client_id', client_id)
-            # connect to API using stomp
-            conn = stomp.Connection12(
-                host_and_ports=[("api.bmreports.com", port)], use_ssl=True
-            )
-            conn.set_listener("", MyListener(conn, listener, api_key, client_id))
-            connect_and_subscribe(conn, api_key, client_id)
-            # check for new messages after every x seconds
-            while conn.is_connected():
-                sleep(1)
-        except Exception as e:
-            print(e)
-            sleep(30)
-        # except stomp.exception.ConnectFailedException:
-        #     print('stomp.exception.ConnectFailedException')
-        # except OSError:
-        #     print('OSError: [Errno 0] Error')
+    # generate client id if not supplied
+    if not client_id:
+        client_id = get_hostname()
+    print('client_id', client_id)
+    # connect to API using stomp
+    conn = stomp.Connection12(
+        host_and_ports=[("api.bmreports.com", port)], use_ssl=True
+    )
+    conn.set_listener("", MyListener(conn, listener, api_key, client_id))
+    # attemp a connect
+    conn.start()
+    ## parts that can be moved to inside the loop
+    connect_and_subscribe(conn, api_key, client_id)
+    # check for new messages after every x seconds
+    while conn.is_connected():
+        sleep(1)
+    disconnect_client(conn, client_id)
+
+    # while True:
+    #     try:
+    #         connect_and_subscribe(conn, api_key, client_id)
+    #         # check for new messages after every x seconds
+    #         while conn.is_connected():
+    #             sleep(1)
+    #         disconnect_client(conn, client_id)
+    #     except Exception as e:
+    #         # conn.transport.disconnect_socket()
+    #         conn.transport.stop()
+    #         # disconnect_client(conn, client_id)
+    #         print(e)
+    #         sleep(60)
+    #     # except stomp.exception.ConnectFailedException:
+    #     #     print('stomp.exception.ConnectFailedException')
+    #     # except OSError:
+    #     #     print('OSError: [Errno 0] Error')
+
+
+def disconnect_client(conn, client_id):
+    # first disconnect before trying to reconnect
+    print('disconnect_client')
+    try:
+        conn.disconnect()
+    except:
+        print('disconnect_client: disconnect failed')
