@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = "1.2.8"
+__version__ = "1.2.81"
 # this new verison sleeps for 30 seconds in case of any error/exception and kees retrying infinitely
 
 from time import sleep, time
@@ -88,29 +88,12 @@ def connect_to_api(api_key, listener, client_id="", port=61613):
     while conn.is_connected():
         sleep(1)
     disconnect_client(conn, client_id)
-
-    # while True:
-    #     try:
-    #         connect_and_subscribe(conn, api_key, client_id)
-    #         # check for new messages after every x seconds
-    #         while conn.is_connected():
-    #             sleep(1)
-    #         disconnect_client(conn, client_id)
-    #     except Exception as e:
-    #         # conn.transport.disconnect_socket()
-    #         conn.transport.stop()
-    #         # disconnect_client(conn, client_id)
-    #         print(e)
-    #         sleep(60)
-    #     # except stomp.exception.ConnectFailedException:
-    #     #     print('stomp.exception.ConnectFailedException')
-    #     # except OSError:
-    #     #     print('OSError: [Errno 0] Error')
+    connect_and_subscribe(conn, api_key, client_id)
 
 
 def disconnect_client(conn, client_id):
     # first disconnect before trying to reconnect
-    print('disconnect_client')
+    print('disconnect BMRS client')
     try:
         conn.disconnect()
     except:
