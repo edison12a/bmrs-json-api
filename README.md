@@ -39,6 +39,10 @@ bmrs.connect_to_api(
 )     
 ```
 
+## Known bugs
+[Dealing with disconnects doesn't recyle threads](https://github.com/jasonrbriggs/stomp.py/issues/151)
+
+
 ## Getting API key
 
 - Register on the [ELEXON Portal](https://www.elexonportal.co.uk/).
