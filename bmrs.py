@@ -82,19 +82,11 @@ def connect_to_api(api_key, listener, client_id="", port=61613):
     conn.set_listener("", MyListener(conn, listener, api_key, client_id))
     # attemp a connect
     conn.start()
-    ## parts that can be moved to inside the loop
-    connect_and_subscribe(conn, api_key, client_id)
-    # check for new messages after every x seconds
-    while conn.is_connected():
-        sleep(1)
-    disconnect_client(conn, client_id)
-    connect_and_subscribe(conn, api_key, client_id)
 
-
-def disconnect_client(conn, client_id):
-    # first disconnect before trying to reconnect
-    print('disconnect BMRS client')
-    try:
+    while True:
+        ## parts that can be moved to inside the loop
+        connect_and_subscribe(conn, api_key, client_id)
+        # check for new messages after every x seconds
+        while conn.is_connected():
+            sleep(1)
         conn.disconnect()
-    except:
-        print('disconnect_client: disconnect failed')
