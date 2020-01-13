@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = "1.2.82"
+__version__ = "1.2.83"
 # this new verison sleeps for 30 seconds in case of any error/exception and kees retrying infinitely
 
 from time import sleep, time
