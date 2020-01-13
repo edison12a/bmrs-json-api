@@ -41,8 +41,7 @@ class MyListener(stomp.ConnectionListener):
 
     def on_error(self, headers, message):
         print(f'on_error! : "{headers}"')
-        disconnect_client(self.conn, self.client_id)
-        connect_and_subscribe(self.conn, self.api_key, self.client_id)
+        self.reconnect()
 
     def on_message(self, headers, message):
         message = xmltodict.parse(message)
@@ -57,11 +56,15 @@ class MyListener(stomp.ConnectionListener):
 
     def on_disconnected(self):
         print("disconnected")
-        connect_and_subscribe(self.conn, self.api_key, self.client_id)
+        self.conn.disconnect()
+        self.reconnect()
 
     def on_heartbeat_timeout(self):
         print("heartbeat_timeout")
-        disconnect_client(self.conn, self.client_id)
+        self.reconnect()
+
+    def reconnect(self):
+        print("attemptig reconnect")
         connect_and_subscribe(self.conn, self.api_key, self.client_id)
 
 
