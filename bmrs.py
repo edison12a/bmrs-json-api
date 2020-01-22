@@ -1,5 +1,5 @@
 """This package enables you receive BMRS data as json instead of the default XML"""
-__version__ = "1.2.83"
+__version__ = "1.2.84"
 # this new verison sleeps for 30 seconds in case of any error/exception and kees retrying infinitely
 
 from time import sleep, time
@@ -26,7 +26,7 @@ def connect_and_subscribe(conn, api_key, client_id):
 
 def get_hostname():
     """Returns hostname of  to be used as client id for connection"""
-    return socket.gethostname()
+    return socket.getfqdn()
 
 
 class MyListener(stomp.ConnectionListener):
