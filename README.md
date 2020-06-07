@@ -1,6 +1,9 @@
-[![PyPI version](https://badge.fury.io/py/bmrs.svg)](https://badge.fury.io/py/bmrs)
-
 # bmrs-json-api
+
+[![PyPI version](https://badge.fury.io/py/bmrs.svg)](https://badge.fury.io/py/bmrs)
+[![Downloads](https://pepy.tech/badge/bmrs)](https://pepy.tech/project/bmrs)
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+
 
 For returning BMRS API data in json format, it fetches data and auto converts it to a dictionary object, easier for data processing.
 
