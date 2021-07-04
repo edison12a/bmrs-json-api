@@ -83,8 +83,6 @@ def connect_to_api(api_key, listener, client_id="", port=61613):
         host_and_ports=[("api.bmreports.com", port)], use_ssl=True
     )
     conn.set_listener("", MyListener(conn, listener, api_key, client_id))
-    # attemp a connect
-    conn.start()
 
     while True:
         ## parts that can be moved to inside the loop
